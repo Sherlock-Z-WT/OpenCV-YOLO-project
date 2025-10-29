@@ -1,4 +1,4 @@
-# 智能高级车辆检测与计数系统
+# Smart Advanced Vehicle Detection and Counting System
 
 <div align="center">
   <img src="https://img.shields.io/badge/Python-3.8%2B-blue.svg">
@@ -6,6 +6,28 @@
   <img src="https://img.shields.io/badge/YOLOv8-v8-orange.svg">
   <img src="https://img.shields.io/badge/PyTorch-1.10%2B-red.svg">
 </div>
+
+## Project Overview
+
+This is an advanced vehicle detection and counting system based on deep learning. Leveraging the YOLO (You Only Look Once) object detection algorithm and a hybrid tracking strategy, the system can accurately detect, track, and count vehicles in videos. It can distinguish vehicle entering and exiting directions, suitable for traffic flow analysis, vehicle counting, and intelligent traffic monitoring scenarios.
+
+### Key Features
+
+- **High-Precision Vehicle Detection**: Based on YOLOv5/YOLOv8 models, supporting multiple vehicle types (car, motorcycle, bus, truck)  
+- **Intelligent Tracking Algorithm**: Hybrid matching strategy based on IoU and distance for stable tracking  
+- **Direction-Aware Counting**: Detect line-based system accurately differentiates ENTER and EXIT directions  
+- **Multi-Level Filtering**: Confidence filtering, size filtering, region filtering, etc., to reduce false positives  
+- **Memory Optimization**: Automatic cleanup mechanism to prevent memory overflow during long runs  
+- **Real-Time Visualization**: Intuitive display of detection results, vehicle types, counts, and detection lines  
+
+## System Architecture
+
+The system is modular, consisting of four core components that implement the complete workflow for detection, tracking, counting, and video processing:
+
+
+
+
+# 智能高级车辆检测与计数系统
 
 ## 项目概述
 
