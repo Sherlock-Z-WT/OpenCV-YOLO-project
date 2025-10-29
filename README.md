@@ -5,7 +5,8 @@
   <img src="https://img.shields.io/badge/YOLOv8-v8-orange.svg">
   <img src="https://img.shields.io/badge/PyTorch-1.10%2B-red.svg">
 </div>
-## 项目概述
+
+### 项目概述
 
 这是一个基于深度学习的高级车辆检测与计数系统，利用YOLO (You Only Look Once) 目标检测算法和混合跟踪策略，实现对视频中车辆的精确检测、跟踪和计数。系统能够区分车辆进入和离开的方向，适用于交通流量分析、车流量统计和智能交通监控等场景。
 
