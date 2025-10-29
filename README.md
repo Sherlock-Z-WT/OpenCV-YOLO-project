@@ -1,4 +1,4 @@
-# 智能高级车辆检测与计数系统
+Smart Advanced Vehicle Detection and Counting System
 
 <div align="center">
   <img src="https://img.shields.io/badge/Python-3.8%2B-blue.svg">
@@ -6,6 +6,228 @@
   <img src="https://img.shields.io/badge/YOLOv8-v8-orange.svg">
   <img src="https://img.shields.io/badge/PyTorch-1.10%2B-red.svg">
 </div>
+
+Project Overview
+
+This is an advanced vehicle detection and counting system based on deep learning. It uses the YOLO (You Only Look Once) object detection algorithm and a hybrid tracking strategy to accurately detect, track, and count vehicles in videos. The system can distinguish between entering and exiting directions, suitable for traffic flow analysis, vehicle counting, and intelligent traffic monitoring scenarios.
+
+Core Features
+
+High-precision vehicle detection based on YOLOv5/YOLOv8 models, supporting multiple vehicle types (car, motorcycle, bus, truck)
+
+Intelligent tracking algorithm with hybrid matching strategy based on IoU and distance for improved stability
+
+Direction-aware counting using detection lines to distinguish ENTER and EXIT directions
+
+Multi-level filtering including confidence, size, region, and shape to reduce false positives
+
+Memory optimization through automatic cleanup to prevent overflow during long runs
+
+Real-time visualization of detection results, vehicle types, counts, and detection lines
+
+System Architecture
+
+The system is modular, consisting of four core components that implement detection, tracking, counting, and video processing:
+
+VideoProcessor → YOLODetector → MovementTracker
+       ▲                            │
+       └────────────────────────────┘
+
+Component Description
+Component	Responsibility	File
+VideoProcessor	Video reading, processing, and output management	video_processor.py
+YOLODetector	Vehicle detection, type recognition, and multi-level filtering	detector.py
+MovementTracker	Vehicle tracking, direction judgment, and counting	tracker.py
+Main	System integration and workflow control	main.py
+Technical Implementation
+1. Vehicle Detection Algorithm
+
+The system uses the Ultralytics YOLO framework, supporting YOLOv5 and YOLOv8 models. Multi-level filtering improves detection accuracy:
+
+Confidence filtering: minimum confidence threshold (0.35) to filter low-confidence detections
+
+Class filtering: detect only vehicle categories (ID: 2, 3, 5, 7)
+
+Size filtering: filter out targets below minimum width, height, or area
+
+Shape filtering: exclude abnormal shapes with width-height ratio (0.3–2.5)
+
+Region filtering: define ROI to focus on the effective area
+
+Position filtering: comprehensive judgment based on target position and confidence
+
+2. Intelligent Tracking Mechanism
+
+The _update_tracked_objects method in tracker.py implements a hybrid matching strategy:
+
+Hybrid scoring system: 60% IoU, 40% center distance for accurate matching
+
+Multi-frame history: maintain 5-frame position history for trajectory analysis
+
+Stage-based matching:
+
+Prioritize matching existing tracked objects to ensure trajectory continuity
+
+Create new tracked objects for unmatched detections
+
+Clean inactive or counted objects to optimize memory
+
+3. Direction-Aware Counting System
+
+Detection line setup: configurable position, default at 10% from video bottom
+
+Cross-line detection: determine whether a vehicle has crossed the line based on history
+
+Direction judgment: based on position change before and after crossing to determine entering or exiting
+
+Deduplication: use counted_vehicles set to ensure each vehicle is counted once
+
+Installation Guide
+Requirements
+
+Python 3.8+
+
+PyTorch 1.10+
+
+OpenCV 4.5+
+
+Ultralytics YOLO
+
+NumPy
+
+Installation Steps
+
+Clone the repository:
+
+git clone https://github.com/Sherlock-Z-WT/OpenCV-YOLO-project.git
+cd OpenCV-YOLO-project
+
+
+Create and activate a virtual environment:
+
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# or
+venv\Scripts\activate  # Windows
+
+
+Install dependencies:
+
+pip install opencv-python torch torchvision numpy ultralytics
+
+
+Download pretrained models if needed (lightweight models are included):
+
+# YOLOv8n (default)
+# YOLOv5n
+wget https://github.com/ultralytics/yolov5/releases/download/v7.0/yolov5n.pt
+
+Usage
+Basic Usage
+
+Set the video path in main.py:
+
+video_path = 'shenzhencar.mp4'
+
+
+Run the main script:
+
+python main.py
+
+
+Processed results will be saved in output/result.mp4
+
+Parameter Configuration
+Detector (detector.py)
+detector = YOLODetector(model_name='yolov8n.pt')
+# Custom models: 'yolov5n.pt', 'yolov5nu.pt', 'yolov8n.pt', etc.
+
+Tracker (tracker.py)
+tracker = MovementTracker(line_ratio=0.9)
+# Detection line position, default at 0.9 (10% from bottom)
+
+Performance Optimization
+
+Model selection:
+
+yolov5n.pt / yolov8n.pt: lightweight, fastest
+
+yolov5s.pt / yolov8s.pt: medium performance
+
+yolov5m.pt / yolov8m.pt: higher precision, slower
+
+Parameter tuning:
+
+Adjust confidence_threshold for precision-recall balance
+
+Adjust max_track_distance for vehicle speed
+
+Adjust line_ratio to optimize detection line
+
+ROI setup: modify ROI parameters in detector.py to focus on the monitored area
+
+Project Structure
+├── main.py                  # Main program entry
+├── detector.py              # YOLO detector
+├── tracker.py               # Vehicle tracking and counting
+├── video_processor.py       # Video processing utilities
+├── utils.py                 # Utility functions
+├── config.yaml              # Config file
+├── output/                  # Output results
+│   └── result.mp4           # Processed video
+├── yolov5n.pt               # Pretrained model
+├── yolov5nu.pt              # Pretrained FP16 quantized model
+├── yolov8n.pt               # Pretrained model
+└── README.md                # Project documentation
+
+Application Scenarios
+
+Traffic flow analysis: real-time vehicle counting and direction
+
+Parking lot management: monitor entry/exit and occupancy
+
+Intelligent security: detect abnormal vehicle movements
+
+Traffic signal optimization: provide data for traffic light timing
+
+Congestion alert: predict possible traffic jams
+
+Advanced Development
+
+Extend vehicle types by modifying vehicle_types in tracker.py and vehicle_classes in detector.py
+
+Add custom filtering rules in detect method of detector.py or enhance tracking logic in tracker.py
+
+Support multiple detection lines for complex traffic analysis in tracker.py
+
+Troubleshooting
+
+Inaccurate detection: adjust confidence_threshold, ensure good lighting, try higher-precision model
+
+Lost tracking: increase max_track_distance, adjust position_history_length
+
+High memory usage: reduce cleanup_interval, reduce max_inactive_time
+
+Incorrect counting: adjust line_ratio, check _check_line_crossing logic
+
+License
+
+MIT License
+
+Acknowledgements
+
+Ultralytics YOLO – object detection models
+
+OpenCV – open-source computer vision library
+
+PyTorch – deep learning framework
+
+Contribution Guidelines
+
+Issues and Pull Requests are welcome. Ensure code style consistency and basic tests pass before submission.
+
+
+# 智能高级车辆检测与计数系统
 
 ## 项目概述
 
